@@ -36,6 +36,13 @@ app.get('/projects', (req, res,next) => {
     })
 })
 
+app.get('/projectlist', (req, res,next) => {
+    res.render('project-detail',{
+        title:"project list",
+        layout:"layout"
+    })
+})
+
 app.get('/blogs', (req, res,next) => {
     res.render('blogs',{
         title:"blog page",
