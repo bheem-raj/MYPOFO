@@ -36,6 +36,14 @@ app.get('/projects', (req, res,next) => {
     })
 })
 
+app.get('/blogs', (req, res,next) => {
+    res.render('blogs',{
+        title:"blog page",
+        layout:"layout"
+    })
+})
+
+
 app.get('/login', (req, res,next) => {
     res.render('login',{
         title:"login Page",
@@ -43,6 +51,19 @@ app.get('/login', (req, res,next) => {
         extraCss:'<link rel="stylesheet" href="/css/signin.css">'
     })
 })
+
+app.get('/signup', (req, res,next) => {
+    res.render('signup',{
+        title:"signup Page",
+        layout:"layout-signin",
+        extraCss:'<link rel="stylesheet" href="/css/signin.css">'
+    })
+})
+
+// middlewares 
+
+app.use(Middleware.notFoundError)
+app.use(Middleware.handleError)
 
 
 
