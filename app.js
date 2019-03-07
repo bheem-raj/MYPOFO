@@ -1,5 +1,6 @@
 const express = require('express');
 const hbs = require('hbs');
+const Middleware = require('./middleware/appmiddleware')
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(express.static(__dirname+'/static'))
 
 hbs.registerPartials(__dirname + '/views/partials')
 
+app.use(Middleware.logger)
+
 // routes
 
 app.get('/', (req, res,next) => {
@@ -27,7 +30,18 @@ app.get('/', (req, res,next) => {
 })
 
 app.get('/projects', (req, res,next) => {
-    res.send('program starter at project')
+    res.render('projects',{
+        title:"project list",
+        layout:"layout"
+    })
+})
+
+app.get('/login', (req, res,next) => {
+    res.render('login',{
+        title:"login Page",
+        layout:"layout-signin",
+        extraCss:'<link rel="stylesheet" href="/css/signin.css">'
+    })
 })
 
 

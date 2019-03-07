@@ -1,4 +1,4 @@
-module.exports.logger = (req, res, next)=> {
-    console.log(`${req.method} ${req.url}`);
-
+module.exports.logger = function(req,res,next) {
+    console.log(`${req.method} ${req.url}`)
+    next();
 }
