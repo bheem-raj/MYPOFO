@@ -1,6 +1,7 @@
 const express = require('express');
 const hbs = require('hbs');
 const Middleware = require('./middleware/appmiddleware')
+const routes = require('./routes/index')
 
 const app = express();
 
@@ -22,50 +23,25 @@ app.use(Middleware.logger)
 
 // routes
 
-app.get('/', (req, res,next) => {
-    res.render('index',{
-        title:"Album Page",
-        layout:"layout"
-    })
-})
+app.get('/',routes.index )
 
-app.get('/projects', (req, res,next) => {
-    res.render('projects',{
-        title:"project list",
-        layout:"layout"
-    })
-})
+app.get('/projects',routes.projects )
 
-app.get('/projectlist', (req, res,next) => {
-    res.render('project-detail',{
-        title:"project list",
-        layout:"layout"
-    })
-})
+app.get('/projectlist',routes.projectlist )
 
-app.get('/blogs', (req, res,next) => {
-    res.render('blogs',{
-        title:"blog page",
-        layout:"layout"
-    })
-})
+app.get('/about',routes.about)
 
+app.get('/contacts',routes.contacts)
 
-app.get('/login', (req, res,next) => {
-    res.render('login',{
-        title:"login Page",
-        layout:"layout-signin",
-        extraCss:'<link rel="stylesheet" href="/css/signin.css">'
-    })
-})
+app.get('/blogs',routes.blogs )
 
-app.get('/signup', (req, res,next) => {
-    res.render('signup',{
-        title:"signup Page",
-        layout:"layout-signin",
-        extraCss:'<link rel="stylesheet" href="/css/signin.css">'
-    })
-})
+app.get('/login',routes.login )
+
+app.get('/dashboard',routes.dashboard)
+
+app.get('/admin/project',routes.project)
+
+app.get('/signup', routes.signup)
 
 // middlewares 
 
