@@ -1,5 +1,7 @@
 const express = require('express');
 const hbs = require('hbs');
+const validator = require('express-validator')
+const bodyParser = require('body-parser')
 const Middleware = require('./middleware/appmiddleware')
 const routes = require('./routes/index')
 
@@ -18,6 +20,15 @@ app.use(express.static(__dirname+'/static'))
 // register partials
 
 hbs.registerPartials(__dirname + '/views/partials')
+hbs.registerHelper("inc", function(value, options) {
+    return value+1;
+})
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+
+
+app.use(validator());
 
 app.use(Middleware.logger)
 
@@ -27,7 +38,7 @@ app.get('/',routes.index )
 
 app.get('/projects',routes.projects )
 
-app.get('/projectlist',routes.projectlist )
+app.get('/projects/:projectAlias', routes.projectDetail);
 
 app.get('/about',routes.about)
 
@@ -39,7 +50,9 @@ app.get('/login',routes.login )
 
 app.get('/dashboard',routes.dashboard)
 
-app.get('/admin/project',routes.project)
+app.get('/project',routes.project)
+
+app.get ('/project/:alias',routes.myProjects)
 
 app.get('/signup', routes.signup)
 

@@ -1,3 +1,5 @@
+const data = require("../my-data.json");
+
 module.exports.index = (req, res,next) => {
     res.render('index',{
         title:"Album Page",
@@ -5,17 +7,25 @@ module.exports.index = (req, res,next) => {
     })
 }
 
-module.exports.projects = (req, res,next) => {
+module.exports.projects = (req, res,next) => { 
+    const projects = data.myProjects
+   
     res.render('projects',{
         title:"project list",
-        layout:"layout"
+        layout:"layout",
+        projects:projects
     })
 }
 
-module.exports.projectlist = (req, res,next) => {
+module.exports.projectDetail = (req, res,next) => {
+    let alias = req.params.projectAlias;
+    let index = data.projectIndex[alias];
+    let project = data.myProjects[index];
+
     res.render('project-detail',{
         title:"project list",
-        layout:"layout"
+        layout:"layout",
+        project:project
     })
 }
 
@@ -56,11 +66,27 @@ module.exports.dashboard = (req, res,next) => {
 }
 
 module.exports.project = (req, res,next) => {
+    const projects = data.myProjects
+
     res.render('admin/project-list',{
         title:"dashboard Page",
         layout:"layout-admin",
+        projects:projects
     })
 }
+
+module.exports.myProjects = (req, res,next) => {
+    const alias = req.params.alias;
+    const index = data.projectIndex[alias];
+    const projects = data.myProjects[index];
+
+    res.render('admin/project-detail',{
+        title:"dashboard Page",
+        layout:"layout-admin",
+        projects:projects
+    })
+}
+
 
 module.exports.signup = (req, res,next) => {
     res.render('signup',{
