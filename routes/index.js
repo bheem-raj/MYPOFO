@@ -1,13 +1,14 @@
+const router = require('express').Router();
 const data = require("../my-data.json");
 
-module.exports.index = (req, res,next) => {
+router.get('/',(req, res,) => {
     res.render('index',{
         title:"Album Page",
         layout:"layout"
     })
-}
+})
 
-module.exports.projects = (req, res,next) => { 
+router.get('/projects',(req, res,next) => { 
     const projects = data.myProjects
    
     res.render('projects',{
@@ -15,83 +16,110 @@ module.exports.projects = (req, res,next) => {
         layout:"layout",
         projects:projects
     })
-}
+})
 
-module.exports.projectDetail = (req, res,next) => {
-    let alias = req.params.projectAlias;
-    let index = data.projectIndex[alias];
-    let project = data.myProjects[index];
+router.get('/blogs', (req, res,next) => {
+    let query = req.query.category
+    let random = Math.floor(Math.random() * data.myBlog.length);
 
-    res.render('project-detail',{
-        title:"project list",
-        layout:"layout",
-        project:project
-    })
-}
-
-module.exports.blogs = (req, res,next) => {
     res.render('blogs',{
         title:"blog page",
-        layout:"layout"
+        layout:"layout",
+        blogs : data.myBlog,
+        blogCategories: data.blogCategories,
+        featuredBlog : data.myBlog[random]
     })
-}
-
-module.exports.about = (req, res,next) => {
+})
+router.get('/about',(req, res,next) => {
     res.render('about',{
         title:"about me",
         layout:"layout"
     })
-}
-
-module.exports.contacts = (req, res,next) => {
+})
+router.get('/contacts', (req, res,next) => {
     res.render('contact',{
         title:"contact us",
         layout:"layout"
     })
-}
+})
 
-module.exports.login = (req, res,next) => {
+router.get('/login', (req, res,next) => {
     res.render('login',{
         title:"login Page",
         layout:"layout-signin",
         extraCss:'<link rel="stylesheet" href="/css/signin.css">'
     })
-}
+})
+let users = [
+    {
+        name:'Bheemaraj',
+        email:"test@test.com",
+        password:'test'
+    },
 
-module.exports.dashboard = (req, res,next) => {
-    res.render('admin/dashboard',{
-        title:"dashboard Page",
-        layout:"layout-admin",
-    })
-}
+    {
+        name:'JS',
+        email:"js@js.com",
+        password:'javascript'
+    }
+]
 
-module.exports.project = (req, res,next) => {
-    const projects = data.myProjects
+router.post('/login', (req,res) => {
+    req.checkBody('email', 'Email is required').isEmail().withMessage('Invalid Email');
 
-    res.render('admin/project-list',{
-        title:"dashboard Page",
-        layout:"layout-admin",
-        projects:projects
-    })
-}
+    req.checkBody('password','Password is required').notEmpty().withMessage('Password is required').isLength({min:3}).withMessage('Length should be min 5')
+    
+    var errors = req.validationErrors();
 
-module.exports.myProjects = (req, res,next) => {
-    const alias = req.params.alias;
-    const index = data.projectIndex[alias];
-    const projects = data.myProjects[index];
+    if(errors) {
+        let msgs = errors.map(ele => ele.msg);
+        res.render('login', {
+            title:'Login',
+            layout:'layout-signin',
+            extraCss:'<link rel="stylesheet" href="/css/signin.css">',
+            messages: msgs
+        });
+    }else {
+        let data = req.body;
+        let foundUser = users.filter(user => data.email == user.email && data.password == user.password)
+        if(foundUser.length > 0) {
+        
+        req.session.isLoggedIn = true;
+        req.session.user = foundUser[0];
+        res.redirect('/admin/dashboard')
 
-    res.render('admin/project-detail',{
-        title:"dashboard Page",
-        layout:"layout-admin",
-        projects:projects
-    })
-}
+        }else {
+            res.render('login', {
+                title:'Login',
+                layout:'layout-signin',
+                extraCss:'<link rel="stylesheet" href="/css/signin.css">',
+                messages: ['Email or Password Wrong']
+            });
+        }
 
+    }
+})
 
-module.exports.signup = (req, res,next) => {
+router.get('/logout', (req,res) => {
+    req.session.isLoggedIn = false;
+    
+    res.redirect('/')
+})
+
+router.get('/signup',(req, res,next) => {
     res.render('signup',{
         title:"signup Page",
         layout:"layout-signin",
         extraCss:'<link rel="stylesheet" href="/css/signin.css">'
     })
-}
+})
+
+module.exports = router;
+
+
+
+
+
+
+
+

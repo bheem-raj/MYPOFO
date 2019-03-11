@@ -17,3 +17,14 @@ module.exports.handleError = function(err,req,res,next) {
         layout: 'layout'
     })
 }
+
+module.exports.authenticate = function(req,res,next){
+    let loggedIn = req.session.isLoggedIn;
+   
+    if(loggedIn) {
+        next()
+    }else {
+        res.redirect('/login')
+    }
+}
+
