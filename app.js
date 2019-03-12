@@ -1,8 +1,9 @@
 const express = require('express');
 const hbs = require('hbs');
-const validator = require('express-validator')
+const validator = require('express-validator');
+const mongodb = require('mongodb');
 const session = require('express-session');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const Middleware = require('./middleware/appmiddleware')
 
 
@@ -11,6 +12,16 @@ const projects = require('./routes/projects')
 const admin =require('./routes/admin')
 
 const app = express();
+
+mongodb.connect('mongodb://localhost:27017/mean1',{
+    useNewUrlParser: true}, function(err, data){
+        if(err){
+            console.log(err)
+        }else{
+            console.log('DB Connection Successfull')
+        }        
+})
+
 
 // set views 
 
