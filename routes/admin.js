@@ -1,8 +1,19 @@
 const router = require('express').Router();
 const data = require('../my-data.json');
-const Project = require('../models/projectSchema')
+const Project = require('../models/projectSchema');
+const multer = require('multer')
+const path = require('path')
 
+let storage = multer.diskStorage({
+    destination: function(req,file,cb) {
+        cb(null, path.join(__dirname, '../static/image/projects'))
+    },
+    filename: function(req,file,cb) {
+        cb(null, file.originalname)
+    } 
+})
 
+const upload = multer({storage:storage})
 
 router.get('/dashboard', (req, res, next) => {
     res.render('admin/dashboard', {
@@ -77,9 +88,30 @@ router.post('/projects/:alias/update', (req, res) => {
 
 
 
-    Project.findOneAndUpdate({ alias: alias }, { $set: bodyData, $inc: { __v: 1 } }, { new: true }).then(data => {
+    Project.findOneAndUpdate({alias:alias}, {$set:bodyData, $inc:{__v:1}}, {new:true}).then(data =>{
         console.log(data)
         res.redirect('/admin/projects')
+    }).catch(err => next(err))
+})
+
+router.get('/projects/:alias/image-upload', (req,res) => {
+    let alias = req.params.alias
+    res.render('admin/upload', {
+        title:'Upload',
+        layout:'layout-admin',
+        actionUrl:'/admin/projects/'+alias+'/image-upload'
+    })
+})
+
+router.post('/projects/:alias/image-upload', upload.single('upload'), (req,res,next) =>{
+
+    let file = req.file;
+    // console.log(file);
+
+    Project.findOneAndUpdate({alias:req.params.alias}, {$set:{imageUrl: `/image/projects/${file.originalname}`}}, {new:true}).then(data => {
+        console.log(data)
+        res.redirect('/admin/projects')
+
     }).catch(err => next(err))
 })
 

@@ -4,7 +4,7 @@ const data = require("../my-data.json");
 router.get('/',(req, res,) => {
     res.render('index',{
         title:"Album Page",
-        layout:"layout"
+        layout:"layout-index"
     })
 })
 
@@ -30,6 +30,7 @@ router.get('/blogs', (req, res,next) => {
         featuredBlog : data.myBlog[random]
     })
 })
+
 router.get('/about',(req, res,next) => {
     res.render('about',{
         title:"about me",
