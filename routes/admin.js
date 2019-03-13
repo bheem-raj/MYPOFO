@@ -1,19 +1,8 @@
 const router = require('express').Router();
 const data = require('../my-data.json');
-const Client = require('mongodb').MongoClient;
+const Project = require('../models/projectSchema')
 
-let dbUrl = 'mongodb://localhost:27017';
 
-let db;
-
-Client.connect(dbUrl, { useNewUrlParser: true }, function (error, client) {
-    if (error) {
-        console.log(error)
-    } else {
-        console.log('Successfully Connected to DB');
-        db = client.db('mean1')
-    }
-})
 
 router.get('/dashboard', (req, res, next) => {
     res.render('admin/dashboard', {
@@ -23,56 +12,75 @@ router.get('/dashboard', (req, res, next) => {
 })
 
 router.get('/projects', (req, res, next) => {
-    let projectsCollection = db.collection('projects');
 
-    projectsCollection.find().toArray(function (err, projectList) {
+    Project.find().then(projectList => {
+        res.render('admin/project-list', {
+            title: 'Project List',
+            layout: 'layout-admin',
+            projects: projectList
+        })
 
-        if (err) {
-            next(err)
-        } else {
-            res.render('admin/project-list', {
-                title: 'Project List',
-                layout: 'layout-admin',
-                projects: projectList
-            })
-        }
-    })
+    }).catch(err => next(err))
+
+
 })
 
-router.get('/projects/create', (req,res) => {
+router.get('/projects/create', (req, res) => {
     res.render('admin/project-create', {
         title: "Create New Project",
         layout: "layout-admin"
     })
 })
 
-router.post('/projects/create', (req,res,next) => {
+router.post('/projects/create', (req, res) => {
     let data = req.body;
 
-    let projectCollection = db.collection('projects');
+    let alias = data.name.toLowerCase().trim().split(' ').join('-')
+    // console.log(alias)
+    data.alias = alias;
 
-    projectCollection.insertOne(data,function(err, project) {
-        if(err){
-            console.log(err)
-            next(err)
-        }else {
-            console.log(project.toJSON())
-            res.redirect('/admin/projects')
-        }
-    })
+    let newProject = new Project(data);
 
+    newProject.save().then(projectSaved => {
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
 })
 
-router.get('/projects/:alias', (req, res, next) => {
-    const alias = req.params.alias;
-    const index = data.projectIndex[alias];
-    const projects = data.myProjects[index];
 
-    res.render('admin/project-detail', {
-        title: "dashboard Page",
-        layout: "layout-admin",
-        projects: projects
-    })
+router.get('/projects/:alias', (req, res, next) => {
+    let alias = req.params.alias;
+
+    Project.findOne({ alias: alias }).then(data => {
+        res.render('admin/project-detail', {
+            title: 'Project Detail',
+            layout: 'layout-admin',
+            project: data
+        })
+    }).catch(err => next(err))
+})
+
+
+router.get('/projects/:alias/delete', (req, res) => {
+    let alias = req.params.alias;
+
+    Project.findOneAndDelete({ alias: alias }).then(data => {
+        console.log(data)
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
+})
+
+router.post('/projects/:alias/update', (req, res) => {
+    let bodyData = req.body;
+
+    console.log(bodyData)
+    let alias = req.params.alias;
+
+
+
+    Project.findOneAndUpdate({ alias: alias }, { $set: bodyData, $inc: { __v: 1 } }, { new: true }).then(data => {
+        console.log(data)
+        res.redirect('/admin/projects')
+    }).catch(err => next(err))
 })
 
 module.exports = router;

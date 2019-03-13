@@ -4,55 +4,55 @@
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
 
-                
-                <a href="#" class="btn btn-sm btn-outline-secondary">Create New</a>
+
+                <a href="/admin/projects/create" class="btn btn-sm btn-outline-secondary">Create New</a>
 
 
-                <a href= "#" class="btn btn-sm btn-outline-secondary">Delete</a>
+                <a href="/admin/projects/{{project.alias}}/delete" class="btn btn-sm btn-outline-secondary">Delete</a>
             </div>
         </div>
     </div>
 
-    <form action="" method="post">
+    <form action="/admin/projects/{{project.alias}}/update" method="post">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{projects.name}}">
+                    <input type="text" name="name" id="name" class="form-control" value="{{project.name}}">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="alias">Alias</label>
-                    <input type="text" disabled name="alias" id="alias" class="form-control" value="{{projects.alias}}">
+                    <input type="text" disabled name="alias" id="alias" class="form-control" value="{{project.alias}}">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">GithubUrl</label>
-                    <input type="text" class="form-control" value="{{projects.githubUrl}}">
+                    <input type="text" class="form-control" value="{{project.githubUrl}}">
                 </div>
             </div>
+           
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">Tag</label>
-                    <input type="text" class="form-control" value="{{#each projects.tags}}{{this.name}},{{/each}}">
+                    <input type="text" class="form-control" value="{{#each project.tags}}{{this.name}},{{/each}}">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea type="text" rows="5" name="description" id="description" class="form-control" value="{{projects.description}}">{{projects.description}}</textarea>
+                    <textarea type="text" rows="5" name="description" id="description" class="form-control"
+                        value="{{project.description}}">{{project.description}}</textarea>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">Image</label>
-                    {{#if projects.image}}
-                        <img src="{{projects.image}}" alt="">
+                    {{#if project.image}}
+                    <img src="{{project.image}}" alt="">
                     {{else}}
-
                     <input type="file" class="form-control" value=""></input>
                     {{/if}}
                 </div>
@@ -60,6 +60,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>
+
+
+
 
     </form>
 </main>

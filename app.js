@@ -1,7 +1,7 @@
 const express = require('express');
 const hbs = require('hbs');
 const validator = require('express-validator');
-const mongodb = require('mongodb');
+const mongoose = require('mongoose');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const Middleware = require('./middleware/appmiddleware')
@@ -13,7 +13,7 @@ const admin =require('./routes/admin')
 
 const app = express();
 
-mongodb.connect('mongodb://localhost:27017/mean1',{
+mongoose.connect('mongodb://localhost:27017/mean1',{
     useNewUrlParser: true}, function(err, data){
         if(err){
             console.log(err)
