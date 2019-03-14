@@ -9,6 +9,10 @@
 
 
                 <a href="/admin/projects/{{project.alias}}/delete" class="btn btn-sm btn-outline-secondary">Delete</a>
+
+
+                <a href="/admin/projects/{{project.alias}}/upload-demo" class="btn btn-sm btn-outline-secondary">Upload
+                    Demo</a>
             </div>
         </div>
     </div>
@@ -55,6 +59,8 @@
                     <img src="{{project.imageUrl}}" height="100" width="100" alt="">
                     {{else}}
                     <a href="/admin/projects/{{project.alias}}/image-upload">Upload Image</a> {{/if}}
+
+
                 </div>
             </div>
         </div>

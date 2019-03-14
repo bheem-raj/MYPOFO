@@ -7,8 +7,7 @@
                     <div>
                         <h2>Links</h2>
                         <div class="sb-link">
-                            <a href="#" class="btn btn-primary">Live Demo</a>
-                        </div>
+                            <a href="/projects/demo/{{project.alias}}" class="btn btn-primary">Live Demo</a> </div>
 
                         <div class="sb-link">
                             <a href="#" class="btn btn-secondary">Github</a>
@@ -33,7 +32,7 @@
 
                     <div>
                         <h2>Related Projects</h2>
-                        
+
                         {{#each project.relatedProjects}}
                         <div class="sb-link">
                             <a href="{{this.link}}">{{this.name}}</a>
